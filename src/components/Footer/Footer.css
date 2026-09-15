@@ -1,0 +1,58 @@
+.site-footer {
+  padding-block: var(--space-8) var(--space-6);
+  background: var(--color-cocoa);
+  font-size: var(--text-small);
+}
+
+.site-footer__grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .site-footer__grid {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1.5fr);
+    gap: var(--grid-gap);
+  }
+}
+
+.site-footer__brand .wordmark {
+  margin-bottom: var(--space-3);
+  font-size: 2.5rem;
+}
+
+.site-footer__about {
+  max-width: 32ch;
+  color: var(--color-clay);
+}
+
+.site-footer__links {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer__contact {
+  display: grid;
+  gap: var(--space-2);
+  font-style: normal;
+  color: var(--color-clay);
+}
+
+.site-footer__contact a {
+  justify-self: start;
+  color: var(--color-shea);
+}
+
+.site-footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-6);
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-rule);
+  color: var(--color-clay);
+}

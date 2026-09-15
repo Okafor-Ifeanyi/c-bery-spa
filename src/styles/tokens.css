@@ -1,0 +1,58 @@
+/* ==========================================================================
+   C-berry design tokens
+   Rebrand by editing this block only. Every component reads from here.
+   Contrast notes (WCAG 2.1): Shea on Kola 15.4, Clay on Kola 7.7,
+   Candle on Kola 9.2, Shea on Berry 5.6. Berry on Kola is 2.8, so Berry
+   is used only as a fill behind Shea text, never as text or a thin line.
+   ========================================================================== */
+
+:root {
+  /* Colour ---------------------------------------------------------------- */
+  --color-kola: #1c1411;        /* page ground: warm brown-black */
+  --color-cocoa: #2b1f1a;       /* raised panels: form, tiles, footer */
+  --color-shea: #f4ebe1;        /* primary text */
+  --color-clay: #b8a596;        /* secondary text, input borders */
+  --color-candle: #e6ae6e;      /* prices, focus ring, open-now dot */
+  --color-berry: #a3345a;       /* primary action fill only */
+  --color-berry-deep: #8a2a4b;  /* primary action hover */
+  --color-error: #f29c9c;       /* inline form errors (7.6 on Cocoa) */
+  --color-wash: rgb(244 235 225 / 0.08);  /* ghost button hover */
+  --color-rule: rgb(184 165 150 / 0.25);  /* decorative dividers */
+
+  /* Type ------------------------------------------------------------------ */
+  --font-display: 'Cormorant Garamond', 'Cormorant', Georgia, 'Times New Roman', serif;
+  --font-body: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --text-display: clamp(3.25rem, 1.9rem + 6.2vw, 7.5rem);
+  --text-h2: clamp(2.5rem, 1.7rem + 3.4vw, 4.5rem);
+  --text-h3: clamp(1.625rem, 1.3rem + 1.1vw, 2.25rem);
+  --text-lead: clamp(1.0625rem, 0.98rem + 0.4vw, 1.3125rem);
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-label: 0.8125rem;
+  --tracking-label: 0.1em;
+
+  /* Space ----------------------------------------------------------------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --gutter: clamp(1rem, 3.3vw, 3.5rem);
+  --grid-gap: clamp(1.25rem, 2.5vw, 2.75rem);
+  --section-pad: clamp(4.5rem, 9vw, 9rem);
+  --container: 1440px;
+  --header-h: 4.5rem;
+
+  /* Shape ----------------------------------------------------------------- */
+  --radius-image: 12px;   /* photographs only */
+  --radius-control: 0;    /* buttons and inputs stay square */
+
+  /* Motion ---------------------------------------------------------------- */
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --dur-fast: 0.15s;
+  --dur-base: 0.3s;
+}

@@ -1,0 +1,165 @@
+/*
+ * Mobile: the photo fills the hero behind the text, darkened from the bottom.
+ * Desktop (900px+): split layout with text left and the photo in its own column.
+ */
+
+.hero {
+  position: relative;
+  display: grid;
+  min-height: calc(100svh - var(--header-h));
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+/* Legibility treatment: Kola is near-opaque behind every line of text. */
+.hero__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    var(--color-kola) 38%,
+    rgb(28 20 17 / 0.82) 62%,
+    rgb(28 20 17 / 0.3) 100%
+  );
+}
+
+.hero__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.hero__content {
+  align-self: end;
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+  padding: var(--space-8) var(--gutter) clamp(2.5rem, 6vw, 5rem);
+}
+
+.hero__status {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--color-clay);
+}
+
+.hero__status time {
+  color: var(--color-shea);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-candle);
+  box-shadow: 0 0 0.75rem var(--color-candle);
+}
+
+.hero__title {
+  max-width: 11ch;
+  font-size: var(--text-display);
+  line-height: 0.95;
+}
+
+.hero__tagline {
+  max-width: 30ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 1.1rem + 1vw, 2rem);
+  font-style: italic;
+  line-height: 1.25;
+  color: var(--color-shea);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-4) 0 0;
+  padding: var(--space-4) 0 0;
+  border-top: 1px solid var(--color-rule);
+  list-style: none;
+  font-size: var(--text-small);
+  color: var(--color-clay);
+}
+
+@media (min-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  }
+
+  .hero__media {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* Only a soft seam where the photo meets the text column. */
+  .hero__media::after {
+    background: linear-gradient(to right, var(--color-kola), rgb(28 20 17 / 0) 28%);
+  }
+
+  .hero__content {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    padding-block: var(--space-8);
+    /* Line the text up with the page container at any width. */
+    padding-inline-start: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter)));
+    padding-inline-end: var(--space-7);
+  }
+}
+
+/*
+ * The page's one orchestrated moment: the room "warms up" as if the candles
+ * were being lit, then the words settle in. Skipped entirely for reduced motion.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__image {
+    animation: hero-candle-warm 2.8s var(--ease-out-expo) both;
+  }
+
+  .hero__content > * {
+    animation: hero-settle 1.6s var(--ease-out-expo) both;
+  }
+
+  .hero__content > :nth-child(1) { animation-delay: 0.3s; }
+  .hero__content > :nth-child(2) { animation-delay: 0.42s; }
+  .hero__content > :nth-child(3) { animation-delay: 0.54s; }
+  .hero__content > :nth-child(4) { animation-delay: 0.66s; }
+  .hero__content > :nth-child(5) { animation-delay: 0.78s; }
+}
+
+@keyframes hero-candle-warm {
+  from {
+    filter: brightness(0.25) saturate(0.6);
+    transform: scale(1.04);
+  }
+}
+
+@keyframes hero-settle {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}

@@ -1,0 +1,134 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgb(28 20 17 / 0.92);
+  border-bottom: 1px solid transparent;
+  backdrop-filter: blur(12px);
+  transition: border-color var(--dur-base) ease;
+}
+
+.site-header.is-scrolled {
+  border-bottom-color: var(--color-rule);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--header-h);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 1.875rem;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.site-nav {
+  margin-left: auto;
+}
+
+.site-nav__toggle {
+  min-height: 2.75rem;
+  padding-inline: var(--space-4);
+  background: none;
+  border: 1px solid var(--color-clay);
+  border-radius: var(--radius-control);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.site-nav__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav__list a {
+  text-decoration: none;
+}
+
+.site-header__cta {
+  min-height: 2.75rem;
+  padding: 0.625rem 1.125rem;
+}
+
+.site-header__cta-short {
+  display: none;
+}
+
+/* Mobile: the list drops down as a full-width panel under the header. */
+@media (max-width: 859.98px) {
+  .site-nav__list {
+    position: absolute;
+    top: 100%;
+    inset-inline: 0;
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-5) var(--gutter) var(--space-7);
+    background: var(--color-cocoa);
+    border-bottom: 1px solid var(--color-rule);
+  }
+
+  .site-nav__list[data-open='false'] {
+    display: none;
+  }
+
+  .site-nav__list a {
+    display: block;
+    padding-block: var(--space-2);
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    font-style: italic;
+    font-weight: 500;
+  }
+}
+
+@media (min-width: 860px) {
+  .site-nav {
+    margin-inline: auto;
+  }
+
+  .site-nav__toggle {
+    display: none;
+  }
+
+  .site-nav__list {
+    display: flex;
+    gap: var(--space-6);
+  }
+
+  .site-nav__list a {
+    display: inline-block;
+    padding-block: var(--space-2);
+    border-bottom: 1px solid transparent;
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    transition: border-color var(--dur-fast) ease;
+  }
+
+  .site-nav__list a:hover {
+    border-bottom-color: var(--color-candle);
+  }
+}
+
+/* Narrowest phones: shorten the CTA so wordmark, menu and CTA share one row. */
+@media (max-width: 399.98px) {
+  .site-header__cta-long {
+    display: none;
+  }
+
+  .site-header__cta-short {
+    display: inline;
+  }
+}
