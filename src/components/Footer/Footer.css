@@ -1,7 +1,17 @@
 .site-footer {
+  position: relative;
   padding-block: var(--space-8) var(--space-6);
   background: var(--color-cocoa);
   font-size: var(--text-small);
+}
+
+/* The footer's top edge. It draws itself across from the left (motion.css). */
+.site-footer__rule {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: var(--color-rule);
+  transform-origin: left;
 }
 
 .site-footer__grid {

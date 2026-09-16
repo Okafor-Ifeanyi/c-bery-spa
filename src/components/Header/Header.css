@@ -1,27 +1,50 @@
+/*
+ * A floating glass bar, inset from the page edges with fully rounded ends.
+ *
+ * Scroll-linked, not scroll-triggered: --head is written by useScrollProgress
+ * as a continuous 0 -> 1 over the first 100px of scroll, and the bar's
+ * density, blur and shadow interpolate from it. Nothing snaps at a threshold.
+ *
+ * The bar sits in flow above the hero, so at --head 0 it lies over the Kola
+ * page ground and its low alpha costs no contrast. By the time content scrolls
+ * under it, --head is 1 and the fill is 0.9 Kola, where Shea text still
+ * measures well above AA against a pure white photo highlight.
+ *
+ * The fallback of 1 means a browser that never runs the script gets the dense
+ * state, which is the legible one.
+ *
+ * Height: 0.625rem above + the bar + 0.25rem below = --header-h, which the
+ * hero and scroll-padding already account for.
+ */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgb(28 20 17 / 0.92);
-  border-bottom: 1px solid transparent;
-  backdrop-filter: blur(12px);
-  transition: border-color var(--dur-base) ease;
-}
-
-.site-header.is-scrolled {
-  border-bottom-color: var(--color-rule);
+  padding-block: 0.625rem 0.25rem;
+  pointer-events: none; /* the transparent strip around the bar isn't a target */
 }
 
 .site-header__inner {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  min-height: var(--header-h);
+  width: min(100% - 2 * var(--gutter), var(--container) - 2 * var(--gutter));
+  min-height: calc(var(--header-h) - 0.875rem);
+  margin-inline: auto;
+  padding-inline: 1.25rem 0.375rem;
+  background: rgb(28 20 17 / calc(0.55 + 0.35 * var(--head, 1)));
+  border: 1px solid rgb(244 235 225 / calc(0.08 + 0.06 * var(--head, 1)));
+  border-radius: 999px;
+  box-shadow: 0 0.75rem 2rem -1rem rgb(0 0 0 / calc(0.7 * var(--head, 1)));
+  backdrop-filter: blur(calc(10px + 8px * var(--head, 1))) saturate(1.4);
+  -webkit-backdrop-filter: blur(calc(10px + 8px * var(--head, 1))) saturate(1.4);
+  pointer-events: auto;
 }
 
 .wordmark {
   font-family: var(--font-display);
-  font-size: 1.875rem;
+  font-size: 1.75rem;
   font-style: italic;
   font-weight: 600;
   line-height: 1;
@@ -29,21 +52,14 @@
   text-decoration: none;
 }
 
-.site-nav {
-  margin-left: auto;
+/* A small gold full stop after the name. */
+.wordmark::after {
+  content: '.';
+  color: var(--color-gold);
 }
 
-.site-nav__toggle {
-  min-height: 2.75rem;
-  padding-inline: var(--space-4);
-  background: none;
-  border: 1px solid var(--color-clay);
-  border-radius: var(--radius-control);
-  font-size: var(--text-label);
-  font-weight: 500;
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  cursor: pointer;
+.site-nav {
+  margin-left: auto;
 }
 
 .site-nav__list {
@@ -56,42 +72,121 @@
   text-decoration: none;
 }
 
-.site-header__cta {
+.site-header__cta.btn {
   min-height: 2.75rem;
-  padding: 0.625rem 1.125rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
 }
 
 .site-header__cta-short {
   display: none;
 }
 
-/* Mobile: the list drops down as a full-width panel under the header. */
+/* -- Menu toggle: two bars that cross into an X ----------------------------- */
+
+.site-nav__toggle {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  background: var(--color-wash);
+  border: 1px solid var(--color-rule);
+  border-radius: 50%;
+  color: var(--color-shea);
+  cursor: pointer;
+}
+
+.site-nav__bars,
+.site-nav__bars::before,
+.site-nav__bars::after {
+  display: block;
+  width: 1.125rem;
+  height: 1.5px;
+  border-radius: 1px;
+  background: currentColor;
+}
+
+.site-nav__bars {
+  position: relative;
+  background: transparent;
+}
+
+.site-nav__bars::before,
+.site-nav__bars::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+
+.site-nav__bars::before {
+  top: -3.5px;
+}
+
+.site-nav__bars::after {
+  top: 3.5px;
+}
+
+.site-nav__toggle[aria-expanded='true'] .site-nav__bars::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.site-nav__toggle[aria-expanded='true'] .site-nav__bars::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+/* -- Mobile: a rounded glass panel drops below the bar ---------------------- */
 @media (max-width: 859.98px) {
   .site-nav__list {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 0.5rem);
     inset-inline: 0;
     display: grid;
-    gap: var(--space-1);
-    padding: var(--space-5) var(--gutter) var(--space-7);
-    background: var(--color-cocoa);
-    border-bottom: 1px solid var(--color-rule);
+    padding: var(--space-3) var(--space-5) var(--space-5);
+    background: rgb(43 31 26 / 0.94);
+    border: 1px solid var(--color-rule);
+    border-radius: 1.5rem;
+    box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.7);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
   }
 
   .site-nav__list[data-open='false'] {
     display: none;
   }
 
+  .site-nav__list li + li {
+    border-top: 1px solid var(--color-rule);
+  }
+
   .site-nav__list a {
-    display: block;
-    padding-block: var(--space-2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-3);
     font-family: var(--font-display);
-    font-size: 2.25rem;
+    font-size: 2rem;
     font-style: italic;
     font-weight: 500;
   }
+
+  .site-nav__list a::after {
+    content: '→';
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    font-style: normal;
+    color: var(--color-clay);
+  }
+
+  .site-nav__list a[aria-current='true'],
+  .site-nav__list a[aria-current='true']::after {
+    color: var(--color-candle);
+  }
 }
 
+/* -- Desktop: centred links with a soft pill hover and an active dot -------- */
 @media (min-width: 860px) {
   .site-nav {
     margin-inline: auto;
@@ -103,22 +198,53 @@
 
   .site-nav__list {
     display: flex;
-    gap: var(--space-6);
+    gap: var(--space-1);
   }
 
   .site-nav__list a {
+    position: relative;
     display: inline-block;
-    padding-block: var(--space-2);
-    border-bottom: 1px solid transparent;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    color: var(--color-clay);
     font-size: var(--text-label);
     font-weight: 500;
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    transition: border-color var(--dur-fast) ease;
+    transition:
+      color var(--dur-micro) var(--ease-hover),
+      background-color var(--dur-micro) var(--ease-hover);
   }
 
-  .site-nav__list a:hover {
-    border-bottom-color: var(--color-candle);
+  .site-nav__list a:hover,
+  .site-nav__list a:focus-visible {
+    background: var(--color-wash);
+    color: var(--color-shea);
+  }
+
+  .site-nav__list a[aria-current='true'] {
+    color: var(--color-shea);
+  }
+
+  .site-nav__list a::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0.125rem;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-candle);
+    opacity: 0;
+    transform: translateX(-50%) scale(0);
+    transition:
+      opacity var(--dur-micro) var(--ease-hover),
+      transform var(--dur-state) var(--ease-out);
+  }
+
+  .site-nav__list a[aria-current='true']::after {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
   }
 }
 
@@ -130,5 +256,65 @@
 
   .site-header__cta-short {
     display: inline;
+  }
+}
+
+/* ==========================================================================
+   Beat 7 of the page-load sequence: the header is last in, after the hero's
+   content has settled. Timings come from HERO_BEATS in src/lib/motion.ts.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-intro='pending'] .site-header {
+    opacity: 0;
+  }
+
+  :root[data-intro='run'] .site-header {
+    animation: header-in var(--dur-header) var(--ease-out) var(--at-header) backwards;
+  }
+
+  .site-nav__bars::before,
+  .site-nav__bars::after {
+    transition:
+      top var(--dur-micro) var(--ease-in-out),
+      transform var(--dur-state) var(--ease-in-out);
+  }
+}
+
+/*
+ * The mobile panel drops in and its links follow one by one. Closing stays
+ * instant, because the panel goes back to display:none and animating that out
+ * would leave its links focusable while they look gone.
+ */
+@media (max-width: 859.98px) and (prefers-reduced-motion: no-preference) {
+  .site-nav__list[data-open='true'] {
+    transform-origin: top center;
+    animation: menu-open var(--dur-state) var(--ease-out) backwards;
+  }
+
+  .site-nav__list[data-open='true'] li {
+    animation: menu-item var(--dur-reveal) var(--ease-out) backwards;
+    animation-delay: calc(var(--lead) + var(--i, 0) * var(--stagger-tight));
+  }
+}
+
+@keyframes header-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.75rem);
+  }
+}
+
+@keyframes menu-open {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem) scale(0.98);
+  }
+}
+
+@keyframes menu-item {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
   }
 }

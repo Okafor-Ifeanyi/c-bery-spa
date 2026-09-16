@@ -34,8 +34,6 @@ const SOURCES = [
     alt: 'Candlelit treatment room with amber oil bottles, rolled white towels and dried grasses beside the massage bed' },
   { slot: 'massage', file: 'assets/Massage1.jpg', grade: 'strong',
     alt: 'Woman resting face-down on a massage table, eyes closed and smiling, with smooth hot stones along her back' },
-  { slot: 'nails', file: 'assets/Nail_Service.jpg', grade: 'warm',
-    alt: 'Hands and feet with glossy nude nails and white French tips, resting on grey satin' },
   { slot: 'facial', file: 'assets/Facial_Treatment.jpg', grade: 'none',
     alt: "Therapist's hands smoothing a cleansing mask across a relaxed woman's face" },
   { slot: 'bodyScrub', file: 'assets/Body_Scrub.jpg', grade: 'warm',
@@ -56,7 +54,60 @@ const SOURCES = [
     alt: 'A steam room lit by a single candle and soft ambient light' },
   { slot: 'gallery6', file: 'assets/images/unsplash-amber-oil-bottle.jpg', grade: 'warm',
     alt: 'A hand holding a small amber glass bottle of oil' },
+
+  // Artwork beside the featured review: a gold figure supplied on near-white.
+  // Only the white is removed (see cutOut) so it floats on the dark page; the
+  // artwork itself is shown as supplied. Decorative: empty alt.
+  { slot: 'reviewsArt', file: 'assets/testimonials-no-bg.png', grade: 'none', cutout: {}, alt: '' },
 ];
+
+/*
+ * Keying a white background. Only white that is actually background is
+ * removed: white reachable from the image border (through pixels closer to
+ * white than `reach`), plus enclosed pools of near-pure white (closer than
+ * `holeNear`) of at least `holeArea` px, such as the gaps between arms and
+ * body. Pale marbling inside the artwork is left solid; its specks are far
+ * smaller than `holeArea`. Within the background, opacity ramps from fully
+ * clear to fully solid between the `clear` and `solid` distances from white.
+ */
+const KEY = { clear: 8, solid: 48, reach: 24, holeNear: 12, holeArea: 50 };
+
+/** Marks the pixels that are background, per KEY. `dist` is distance from white. */
+function findBackground(dist, width, height) {
+  const n = width * height;
+  const background = new Uint8Array(n);
+  const flood = (seeds, mark, limit, accept) => {
+    const stack = [...seeds];
+    let area = 0;
+    const visited = [];
+    while (stack.length) {
+      const i = stack.pop();
+      if (mark[i] || dist[i] >= limit || !accept(i)) continue;
+      mark[i] = 1;
+      area++;
+      visited.push(i);
+      const x = i % width;
+      if (x > 0) stack.push(i - 1);
+      if (x < width - 1) stack.push(i + 1);
+      if (i >= width) stack.push(i - width);
+      if (i < n - width) stack.push(i + width);
+    }
+    return { area, visited };
+  };
+
+  const border = [];
+  for (let x = 0; x < width; x++) border.push(x, (height - 1) * width + x);
+  for (let y = 0; y < height; y++) border.push(y * width, y * width + width - 1);
+  flood(border, background, KEY.reach, () => true);
+
+  const seen = new Uint8Array(n);
+  for (let i = 0; i < n; i++) {
+    if (seen[i] || background[i] || dist[i] >= KEY.holeNear) continue;
+    const { area, visited } = flood([i], seen, KEY.holeNear, (j) => !background[j]);
+    if (area >= KEY.holeArea) for (const j of visited) background[j] = 1;
+  }
+  return background;
+}
 
 /** Social preview card: built from this slot's photo. */
 const OG_SOURCE_SLOT = 'gallery1';
@@ -92,8 +143,38 @@ function targetWidths(sourceWidth) {
   return [...new Set([...WIDTHS.filter((w) => w < max), max])];
 }
 
-async function processSource({ slot, file, grade, alt }) {
-  const { buffer, width } = await loadGraded(file, grade);
+/**
+ * Turns an image supplied on plain white into one with a transparent
+ * background, per KEY. Pixels on the edge of the background are made
+ * translucent and un-blended from the white, so no pale fringe shows against a
+ * dark page. Nothing else about the image changes.
+ */
+async function cutOut(file) {
+  const { data, info } = await sharp(file)
+    .rotate()
+    .flatten({ background: '#ffffff' })
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const { width, height } = info;
+  const n = width * height;
+  const dist = new Uint8Array(n);
+  for (let i = 0; i < n; i++) dist[i] = 255 - Math.min(data[i * 3], data[i * 3 + 1], data[i * 3 + 2]);
+  const background = findBackground(dist, width, height);
+
+  const out = Buffer.alloc(n * 4);
+  for (let i = 0; i < n; i++) {
+    const a = background[i] ? Math.max(0, Math.min(1, (dist[i] - KEY.clear) / (KEY.solid - KEY.clear))) : 1;
+    for (let c = 0; c < 3; c++) {
+      out[i * 4 + c] = a > 0 ? Math.max(0, Math.min(255, Math.round((data[i * 3 + c] - (1 - a) * 255) / a))) : 0;
+    }
+    out[i * 4 + 3] = Math.round(a * 255);
+  }
+  const buffer = await sharp(out, { raw: { width, height, channels: 4 } }).png().toBuffer();
+  return { buffer, width };
+}
+
+async function processSource({ slot, file, grade, alt, cutout }) {
+  const { buffer, width } = cutout ? await cutOut(file) : await loadGraded(file, grade);
   const variants = [];
 
   for (const w of targetWidths(width)) {

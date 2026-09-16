@@ -13,13 +13,6 @@
     "height": 736,
     "alt": "Woman resting face-down on a massage table, eyes closed and smiling, with smooth hot stones along her back"
   },
-  "nails": {
-    "src": "/images/nails-628.webp",
-    "srcSet": "/images/nails-480.webp 480w, /images/nails-628.webp 628w",
-    "width": 628,
-    "height": 1200,
-    "alt": "Hands and feet with glossy nude nails and white French tips, resting on grey satin"
-  },
   "facial": {
     "src": "/images/facial-736.webp",
     "srcSet": "/images/facial-480.webp 480w, /images/facial-736.webp 736w",
@@ -82,5 +75,12 @@
     "width": 1600,
     "height": 1066,
     "alt": "A hand holding a small amber glass bottle of oil"
+  },
+  "reviewsArt": {
+    "src": "/images/reviewsArt-736.webp",
+    "srcSet": "/images/reviewsArt-480.webp 480w, /images/reviewsArt-736.webp 736w",
+    "width": 736,
+    "height": 1339,
+    "alt": ""
   }
 }

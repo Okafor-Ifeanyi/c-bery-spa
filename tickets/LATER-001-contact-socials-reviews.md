@@ -28,13 +28,22 @@ The brief forbids placeholder `#` links and invented reviews, so each was left o
 - [ ] Add the URLs to `"sameAs"` in the JSON-LD.
 
 ### 3. Reviews section
-- [ ] Collect 3–6 real reviews with the reviewer's permission: name (or first name + initial), rating, quote, month, optional photo.
-- [ ] New section between Gallery and Visit, id `#reviews`, and a "Reviews" link in the header nav and footer.
-- [ ] Layout planned in the design plan: static asymmetric grid, one featured quote in large display italic plus two or more smaller ones. No carousel.
-- [ ] Only add `aggregateRating` to JSON-LD if the reviews are collected on the site itself (Google's self-serving review rules).
+
+**The section is now built** (2026-09-16), so what is left here is the content, not the work.
+
+- [x] New section between Gallery and Visit, id `#reviews`, with a "Reviews" link in the header nav and footer.
+- [x] Static asymmetric grid: one featured quote in large display italic plus three smaller ones. No carousel.
+- [x] Scroll gesture: a cross-fade in place, the one section on the page where nothing travels.
+- [ ] **Replace the placeholder quotes.** `src/data/reviews.ts` holds four written-copy reviews, marked
+      as placeholders at the top of the file and in the rendered markup. Collect 3–6 real reviews with
+      the reviewer's permission — name (or first name + initial), rating, quote, month, optional photo —
+      and swap them in. The shape of the data doesn't change.
+- [ ] Only add `aggregateRating` to JSON-LD if the reviews are real *and* collected on the site itself
+      (Google's self-serving review rules). Nothing has been added yet.
 
 ## Acceptance criteria
 
 - No empty or `#` links anywhere on the page.
-- Every review is from a real, consenting guest.
+- Every review is from a real, consenting guest. **Not yet true:** the four currently shipping are
+  placeholders and must not go live.
 - Header, footer and JSON-LD stay in sync with `src/data/business.ts`.

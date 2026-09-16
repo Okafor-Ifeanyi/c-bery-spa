@@ -2,8 +2,8 @@
    C-berry design tokens
    Rebrand by editing this block only. Every component reads from here.
    Contrast notes (WCAG 2.1): Shea on Kola 15.4, Clay on Kola 7.7,
-   Candle on Kola 9.2, Shea on Berry 5.6. Berry on Kola is 2.8, so Berry
-   is used only as a fill behind Shea text, never as text or a thin line.
+   Candle on Kola 9.2, Kola on Gold 7.8, Kola on Gold-bright 9.6. Primary
+   buttons are a Gold fill with Kola text, never Shea text on Gold (2.0).
    ========================================================================== */
 
 :root {
@@ -13,8 +13,9 @@
   --color-shea: #f4ebe1;        /* primary text */
   --color-clay: #b8a596;        /* secondary text, input borders */
   --color-candle: #e6ae6e;      /* prices, focus ring, open-now dot */
-  --color-berry: #a3345a;       /* primary action fill only */
-  --color-berry-deep: #8a2a4b;  /* primary action hover */
+  --color-gold: #d4a24c;        /* primary action fill, with Kola text */
+  --color-gold-bright: #e6bb6a; /* primary action hover */
+  --color-gold-deep: #b8863a;   /* primary action gradient foot */
   --color-error: #f29c9c;       /* inline form errors (7.6 on Cocoa) */
   --color-wash: rgb(244 235 225 / 0.08);  /* ghost button hover */
   --color-rule: rgb(184 165 150 / 0.25);  /* decorative dividers */
@@ -45,6 +46,15 @@
   --grid-gap: clamp(1.25rem, 2.5vw, 2.75rem);
   --section-pad: clamp(4.5rem, 9vw, 9rem);
   --container: 1440px;
+  /*
+   * Deeper left inset for large display text (hero, featured review quote), so
+   * it sits further in than the page's other content. --inset-feature grows
+   * with the screen and reaches 8rem at ~1450px; --inset-deep doubles its
+   * extra beyond the gutter, and is what the hero and the quote use.
+   * Both apply from 900px up only.
+   */
+  --inset-feature: clamp(var(--gutter), 11vw - 2rem, 8rem);
+  --inset-deep: calc(var(--inset-feature) * 2 - var(--gutter));
   --header-h: 4.5rem;
 
   /* Shape ----------------------------------------------------------------- */
@@ -52,7 +62,48 @@
   --radius-control: 0;    /* buttons and inputs stay square */
 
   /* Motion ---------------------------------------------------------------- */
-  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
-  --dur-fast: 0.15s;
-  --dur-base: 0.3s;
+  /* Every duration and easing on the site reads from this block. There are no
+     ad-hoc timings in component CSS. See design-plan-motion.md §2. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);      /* entrances, reveals */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);  /* state to state */
+  --ease-hover: cubic-bezier(0.33, 1, 0.68, 1);   /* hover, focus */
+
+  --dur-micro: 180ms;    /* hover, focus, press */
+  --dur-state: 260ms;    /* validation, cross-fade, lightbox arrows */
+  --dur-reveal: 800ms;   /* one element being uncovered (§6b: 700-900) */
+  --dur-head: 700ms;     /* section heading wipe */
+  --dur-stars: 400ms;    /* a rating filling left to right */
+  --dur-rule: 600ms;     /* the footer's rule drawing across */
+  --dur-backdrop: 200ms; /* lightbox backdrop, both motion settings */
+  --dur-shake: 250ms;    /* one shake on form failure */
+  --dur-pulse: 4s;       /* the open-now dot, the page's only loop */
+  /* Must match LIGHTBOX.flip in src/lib/motion.ts, which drives the photo
+     itself while this drives the backdrop underneath it. */
+  --dur-flip: 420ms;
+  /* The hero's own durations are not here: they are the beat sheet in
+     src/lib/motion.ts, written onto :root as --dur-<beat> at run time. */
+
+  --stagger: 100ms;      /* between siblings; chains capped at 8 (§6b) */
+  --stagger-wide: 110ms; /* treatment cards, and lines of the featured quote */
+  --stagger-tight: 80ms; /* footer columns */
+  --lead: 60ms;          /* a heading leads its own section's content by this */
+  --follow: 100ms;       /* body text trails its heading by this */
+  --beat: 300ms;         /* a card's price line trails the card by this */
+
+  /*
+   * Travel. §6b raised these deliberately: at the old amplitude a viewer
+   * scrolling at normal speed could not tell that anything had animated.
+   */
+  --rise: 48px;          /* standard reveal travel */
+  --rise-far: 64px;      /* the booking panel, arriving as one unit */
+  --rise-line: 36px;     /* hero text, and the featured quote's lines */
+  --rise-near: 32px;     /* footer columns: a quiet arrival */
+  --rise-body: 56px;     /* body following its heading, slightly further */
+  --lift: 4px;           /* card hover: unchanged */
+
+  /*
+   * Two-speed reveals: the frame uncovers while the picture inside settles
+   * from this scale back to 1. They share a duration and finish together.
+   */
+  --zoom-from: 1.1;
 }
