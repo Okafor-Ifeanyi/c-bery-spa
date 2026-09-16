@@ -24,16 +24,6 @@ export const services: Service[] = [
     image: 'massage',
   },
   {
-    id: 'nails',
-    name: 'Nail Service',
-    detail: 'Manicure & Pedicure',
-    minutes: 30,
-    price: 15000,
-    description: 'Hands and feet shaped, buffed and polished in one sitting, finished in the colour you choose.',
-    bookLabel: 'Book nails',
-    image: 'nails',
-  },
-  {
     id: 'facial',
     name: 'Facial Treatment',
     detail: 'Deep Cleansing & Hydration',
