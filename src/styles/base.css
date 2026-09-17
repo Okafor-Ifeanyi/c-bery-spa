@@ -9,6 +9,9 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-padding-top: var(--header-h);
+  /* Reserve the scrollbar so opening the lightbox doesn't shift the page
+     under the photo the FLIP is flying from. */
+  scrollbar-gutter: stable;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -75,8 +78,8 @@ textarea {
 }
 
 ::selection {
-  background: var(--color-berry);
-  color: var(--color-shea);
+  background: var(--color-gold);
+  color: var(--color-kola);
 }
 
 /* Layout ------------------------------------------------------------------ */
@@ -131,17 +134,30 @@ textarea {
   text-transform: uppercase;
   cursor: pointer;
   transition:
-    background-color var(--dur-fast) ease,
-    border-color var(--dur-fast) ease;
+    background-color var(--dur-micro) var(--ease-hover),
+    border-color var(--dur-micro) var(--ease-hover),
+    transform var(--dur-micro) var(--ease-hover);
+}
+
+/* Press feedback: the button gives a little under the finger. */
+@media (prefers-reduced-motion: no-preference) {
+  .btn:active {
+    transform: scale(0.98);
+  }
 }
 
 .btn--primary {
-  background: var(--color-berry);
-  color: var(--color-shea);
+  background: linear-gradient(135deg, var(--color-gold-bright), var(--color-gold) 55%, var(--color-gold-deep));
+  background-color: var(--color-gold);
+  color: var(--color-kola);
+  font-weight: 600;
+  box-shadow: 0 0 0 0 rgb(212 162 76 / 0);
+  transition-property: background-color, box-shadow, transform;
 }
 
 .btn--primary:hover {
-  background: var(--color-berry-deep);
+  background: var(--color-gold-bright);
+  box-shadow: 0 0.5rem 1.5rem -0.5rem rgb(212 162 76 / 0.55);
 }
 
 .btn--ghost {
@@ -160,16 +176,53 @@ textarea {
 }
 
 /* Inline text link with a quiet underline. */
+/*
+ * The underline wipes in from the left and out to the right, so entering and
+ * leaving read as different events rather than one thing blinking.
+ * It is drawn as a background so it can be wiped; the resting rule stays a
+ * real text-decoration, which never disappears if the animation doesn't run.
+ */
 .text-link {
   text-decoration: underline;
   text-decoration-color: var(--color-clay);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.25em;
-  transition: text-decoration-color var(--dur-fast) ease;
+  transition: text-decoration-color var(--dur-micro) var(--ease-hover);
 }
 
-.text-link:hover {
+.text-link:hover,
+.text-link:focus-visible {
   text-decoration-color: var(--color-candle);
+}
+
+/*
+ * The candle line is a scaled pseudo-element rather than an animated
+ * background, so the only property in flight is a transform. Swapping the
+ * origin between the two states is what makes it wipe in from the left and
+ * retract to the right.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .text-link {
+    position: relative;
+  }
+
+  .text-link::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: -0.25em;
+    height: 1px;
+    background: var(--color-candle);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--dur-micro) var(--ease-hover);
+  }
+
+  .text-link:hover::after,
+  .text-link:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
 }
 
 /* Accessibility ------------------------------------------------------------ */

@@ -41,6 +41,7 @@
 }
 
 .gallery__trigger {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
@@ -56,12 +57,72 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.9s var(--ease-out-expo);
+  transition: transform var(--dur-micro) var(--ease-hover);
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .gallery__trigger:hover .gallery__image {
+  .gallery__trigger:hover .gallery__image,
+  .gallery__trigger:focus-visible .gallery__image {
     transform: scale(1.03);
+  }
+}
+
+/*
+ * A photograph that is still decoding comes up out of the tile rather than
+ * popping in. The class is only ever added to an image that hasn't loaded
+ * (useImageFadeIn), so a cached photo doesn't flicker, and it lives inside
+ * no-preference so reduced motion sees the image the moment it arrives.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .gallery__image {
+    transition:
+      transform var(--dur-micro) var(--ease-hover),
+      opacity var(--dur-reveal) var(--ease-out),
+      filter var(--dur-reveal) var(--ease-out);
+  }
+
+  .gallery__image.is-loading {
+    opacity: 0;
+    filter: blur(8px);
+  }
+}
+
+/*
+ * On phones tile 5 is a single square cell rather than a wide one, so its wipe
+ * follows the taller axis there, like its neighbours.
+ */
+@media (max-width: 767.98px) and (prefers-reduced-motion: no-preference) {
+  [data-reveal='out'].gallery__item--5.m-frame--left {
+    clip-path: inset(100% 0 0 0);
+  }
+
+  [data-reveal='in'].gallery__item--5.m-frame--left {
+    animation-name: m-wipe-up;
+  }
+}
+
+/*
+ * Touch: the tile crossing the middle of the screen gets the hover zoom, and a
+ * press gives under the finger, so the grid answers a thumb as it does a mouse.
+ */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .gallery__trigger {
+    transition: transform var(--dur-micro) var(--ease-hover);
+  }
+
+  .gallery__image {
+    transition:
+      transform var(--dur-state) var(--ease-hover),
+      opacity var(--dur-reveal) var(--ease-out),
+      filter var(--dur-reveal) var(--ease-out);
+  }
+
+  .gallery__item[data-centred] .gallery__image {
+    transform: scale(1.03);
+  }
+
+  .gallery__trigger:active {
+    transform: scale(0.97);
   }
 }
 
@@ -85,8 +146,52 @@
   gap: var(--space-4);
 }
 
+/*
+ * The backdrop fades under the photograph while it flies, and back out as it
+ * returns. Kept at 200ms in both motion settings: it is an opacity fade, which
+ * reduced motion permits, and without it the panel appears with a hard edge.
+ */
 .lightbox::backdrop {
   background: rgb(18 12 10 / 0.8);
+  animation: lightbox-backdrop-in var(--dur-backdrop) var(--ease-out) backwards;
+}
+
+.lightbox[data-closing]::backdrop {
+  animation: lightbox-backdrop-out var(--dur-flip) var(--ease-in-out) forwards;
+}
+
+@keyframes lightbox-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes lightbox-backdrop-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Both photographs share one cell so the arrows can cross-fade in place. */
+.lightbox__stage {
+  display: grid;
+  min-height: 0;
+}
+
+.lightbox__stage > .lightbox__image {
+  grid-area: 1 / 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .lightbox__image--out {
+    animation: lightbox-fade-out var(--dur-state) linear forwards;
+  }
+}
+
+@keyframes lightbox-fade-out {
+  to {
+    opacity: 0;
+  }
 }
 
 .lightbox__figure {

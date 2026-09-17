@@ -1,5 +1,6 @@
 /*
- * Mobile: the photo fills the hero behind the text, darkened from the bottom.
+ * Mobile: the photo fills the hero behind centred text. The scrim is dense only
+ * where the text sits and fades out toward the edges, so more of the room shows.
  * Desktop (900px+): split layout with text left and the photo in its own column.
  */
 
@@ -15,40 +16,52 @@
   position: absolute;
   inset: 0;
   z-index: -1;
+  overflow: hidden;
 }
 
-/* Legibility treatment: Kola is near-opaque behind every line of text. */
+
+
+/*
+ * Legibility treatment: a soft pool of Kola behind the centred text, a light
+ * veil elsewhere, and a fade to the page ground at the foot so the hero meets
+ * the next section without a seam. The text also carries a faint shadow.
+ */
 .hero__media::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    var(--color-kola) 38%,
-    rgb(28 20 17 / 0.82) 62%,
-    rgb(28 20 17 / 0.3) 100%
-  );
+  background:
+    linear-gradient(to top, var(--color-kola) 0%, rgb(28 20 17 / 0) 22%),
+    radial-gradient(
+      ellipse 85% 55% at 50% 52%,
+      rgb(28 20 17 / 0.78) 0%,
+      rgb(28 20 17 / 0.55) 55%,
+      rgb(28 20 17 / 0.2) 100%
+    );
 }
 
 .hero__image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%;
+  object-position: center 40%;
 }
 
 .hero__content {
-  align-self: end;
+  align-self: center;
   display: grid;
-  justify-items: start;
+  justify-items: center;
   gap: var(--space-5);
   padding: var(--space-8) var(--gutter) clamp(2.5rem, 6vw, 5rem);
+  text-align: center;
+  text-shadow: 0 1px 12px rgb(28 20 17 / 0.6);
 }
 
 .hero__status {
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
   font-size: var(--text-small);
   color: var(--color-clay);
@@ -73,6 +86,11 @@
   line-height: 0.95;
 }
 
+/* One box per word so the intro can mask whole rendered lines. */
+.hero__word {
+  display: inline-block;
+}
+
 .hero__tagline {
   max-width: 30ch;
   font-family: var(--font-display);
@@ -85,13 +103,28 @@
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--space-3);
   margin-top: var(--space-2);
+}
+
+/* Phones: the two CTAs stack at one shared width. */
+@media (max-width: 899.98px) {
+  .hero__actions {
+    display: grid;
+    width: min(100%, 20rem);
+  }
+}
+
+/* Buttons carry their own contrast; the text shadow would only blur them. */
+.hero__actions .btn {
+  text-shadow: none;
 }
 
 .hero__facts {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--space-2) var(--space-5);
   margin: var(--space-4) 0 0;
   padding: var(--space-4) 0 0;
@@ -99,6 +132,20 @@
   list-style: none;
   font-size: var(--text-small);
   color: var(--color-clay);
+}
+
+/* Short screens (small phones, phones held sideways): tighten so it still fits one screen. */
+@media (max-height: 700px) {
+  .hero__content {
+    gap: var(--space-4);
+    padding-top: var(--space-5);
+    padding-bottom: var(--space-5);
+  }
+
+  .hero__facts {
+    margin-top: var(--space-2);
+    padding-top: var(--space-3);
+  }
 }
 
 @media (min-width: 900px) {
@@ -112,6 +159,24 @@
     z-index: auto;
     grid-column: 2;
     grid-row: 1;
+    overflow: hidden;
+  }
+
+
+  /*
+   * The supplied photos are portrait, so at this width the image's own shape
+   * would otherwise set the hero's height (1195px at 1440px wide). Taking it
+   * out of flow lets it fill the column and keeps the hero one screen tall.
+   */
+  .hero__media .hero__image {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__status,
+  .hero__actions,
+  .hero__facts {
+    justify-content: flex-start;
   }
 
   /* Only a soft seam where the photo meets the text column. */
@@ -123,43 +188,151 @@
     grid-column: 1;
     grid-row: 1;
     align-self: center;
+    justify-items: start;
+    text-align: start;
+    text-shadow: none;
     padding-block: var(--space-8);
-    /* Line the text up with the page container at any width. */
-    padding-inline-start: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter)));
+    /* Measured from the page container's edge, but inset deeper than other
+       sections' content (--inset-deep), at any width. */
+    padding-inline-start: max(
+      var(--inset-deep),
+      calc((100vw - var(--container)) / 2 + var(--inset-deep))
+    );
     padding-inline-end: var(--space-7);
   }
 }
 
-/*
- * The page's one orchestrated moment: the room "warms up" as if the candles
- * were being lit, then the words settle in. Skipped entirely for reduced motion.
- */
+/* ==========================================================================
+   The page's one orchestrated moment (design-plan-motion.md §4).
+
+   Every delay and duration below comes from HERO_BEATS in src/lib/motion.ts,
+   written onto :root as --at-<beat> / --dur-<beat> just before the sequence
+   starts. Retune the sequence there, not here.
+
+   The pre-state is keyed to [data-intro='pending'], which only this page's JS
+   sets, so nothing is ever hidden when the script doesn't run. The whole block
+   sits inside no-preference: a reduced-motion visitor gets no pre-state at all.
+   ========================================================================== */
+
 @media (prefers-reduced-motion: no-preference) {
-  .hero__image {
-    animation: hero-candle-warm 2.8s var(--ease-out-expo) both;
+  /* Beat 0 - painted, final layout, nothing has moved yet. */
+  :root[data-intro='pending'] .hero__status,
+  :root[data-intro='pending'] .hero__tagline,
+  :root[data-intro='pending'] .hero__actions,
+  :root[data-intro='pending'] .hero__facts {
+    opacity: 0;
   }
 
-  .hero__content > * {
-    animation: hero-settle 1.6s var(--ease-out-expo) both;
+  :root[data-intro='pending'] .hero__word {
+    clip-path: inset(100% -8% 0 -8%);
   }
 
-  .hero__content > :nth-child(1) { animation-delay: 0.3s; }
-  .hero__content > :nth-child(2) { animation-delay: 0.42s; }
-  .hero__content > :nth-child(3) { animation-delay: 0.54s; }
-  .hero__content > :nth-child(4) { animation-delay: 0.66s; }
-  .hero__content > :nth-child(5) { animation-delay: 0.78s; }
+  :root[data-intro='pending'] .hero__media::after {
+    opacity: 0;
+  }
+
+  :root[data-intro='pending'] .hero__image {
+    transform: scale(var(--zoom-from));
+    filter: brightness(0.45) saturate(0.85);
+  }
+
+  /* Beat 1 - the room warms up, underneath everything else. */
+  :root[data-intro='run'] .hero__image {
+    animation: hero-warm var(--dur-image) var(--ease-out) var(--at-image) backwards;
+  }
+
+  /* Beat 1b - legibility scrim, ahead of the text that sits on it. */
+  :root[data-intro='run'] .hero__media::after {
+    animation: hero-scrim var(--dur-scrim) var(--ease-out) var(--at-scrim) backwards;
+  }
+
+  /*
+   * Beat 2 - the headline, one beat per rendered line. --line is measured after
+   * the fonts land, so a two-line phone layout staggers and a one-line desktop
+   * layout doesn't pretend to.
+   */
+  :root[data-intro='run'] .hero__word {
+    animation: m-line-mask var(--dur-title) var(--ease-out) backwards;
+    animation-delay: calc(var(--at-title) + var(--line, 0) * var(--line-stagger));
+  }
+
+  :root[data-intro='run'] .hero__word-in {
+    display: inline-block;
+    animation: m-line-rise var(--dur-title) var(--ease-out) backwards;
+    animation-delay: calc(var(--at-title) + var(--line, 0) * var(--line-stagger));
+  }
+
+  /* Beat 3 - open-now line and the Enugu clock. */
+  :root[data-intro='run'] .hero__status {
+    animation: hero-rise var(--dur-status) var(--ease-out) var(--at-status) backwards;
+  }
+
+  /* Beat 4 - tagline, uncovered rather than moved. */
+  :root[data-intro='run'] .hero__tagline {
+    animation: hero-wipe var(--dur-tagline) var(--ease-out) var(--at-tagline) backwards;
+  }
+
+  /* Beats 5 and 6 - CTAs, then the facts, each as one unit. */
+  :root[data-intro='run'] .hero__actions {
+    animation: hero-rise var(--dur-actions) var(--ease-out) var(--at-actions) backwards;
+  }
+
+  :root[data-intro='run'] .hero__facts {
+    animation: hero-rise var(--dur-facts) var(--ease-out) var(--at-facts) backwards;
+  }
+
+  /*
+   * The one continuous loop on the page. It is here because it reports ongoing
+   * state: C-berry is open right now. Transform and opacity only, so it costs
+   * one composited layer and no main-thread work.
+   */
+  .hero__dot {
+    animation: hero-pulse var(--dur-pulse) var(--ease-in-out) infinite;
+  }
 }
 
-@keyframes hero-candle-warm {
+@keyframes hero-warm {
   from {
-    filter: brightness(0.25) saturate(0.6);
-    transform: scale(1.04);
+    transform: scale(var(--zoom-from));
+    filter: brightness(0.45) saturate(0.85);
   }
 }
 
-@keyframes hero-settle {
+@keyframes hero-scrim {
   from {
     opacity: 0;
-    transform: translateY(0.75rem);
+  }
+}
+
+/* §6b hero text travel: 36px, inside its 32-40px band. */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-line));
+  }
+}
+
+@keyframes hero-wipe {
+  from {
+    opacity: 0;
+    clip-path: inset(100% -4% 0 -4%);
+    transform: translateY(var(--rise-line));
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-20% -4% -20% -4%);
+    transform: none;
+  }
+}
+
+@keyframes hero-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
   }
 }

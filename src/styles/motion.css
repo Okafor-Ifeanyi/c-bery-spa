@@ -1,0 +1,329 @@
+/*
+ * Scroll reveals and image drift (design-plan-motion.md §3, amended by §6b).
+ *
+ * Every animated unit carries data-reveal, set to "out" in the markup and
+ * flipped to "in" by useReveal (src/lib/motion.ts) when the unit arrives. One gesture per
+ * section:
+ *
+ *   section headings   mask wipe upward; the supporting line follows, further
+ *   .reveal-card       Treatments: card wipes up while its photo settles
+ *   .m-frame           Gallery: tile wipes along its long edge, photo settles
+ *   .reveal-quote      Reviews: featured quote uncovered line by line
+ *   .reveal-rise       Reviews cards and the Treatments prompt: a long rise
+ *   .reveal-unit       Visit: the whole panel, from furthest away
+ *   .site-footer       rule draws across, then the columns come up
+ *
+ * Two-speed: wherever a photograph is uncovered, the frame wipes open while
+ * the picture inside (.m-zoom) settles from 1.10, on the same duration and
+ * easing, so the two land together.
+ *
+ * Every hidden state lives inside `no-preference`, so a reduced-motion visitor
+ * is never given one. Reveals are animations with `backwards` fill: the fill
+ * covers the stagger delay, and once finished the element is back under the
+ * normal cascade, so hover transforms aren't blocked by a finished reveal.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* -- Shared timing ------------------------------------------------------
+   * --i is the unit's slot in its arrival batch, --pace is 0.6 when it arrived
+   * late. Descendants inherit both values, so a photo inside a card lands on
+   * its card's schedule. */
+  [data-reveal] {
+    --t-dur: calc(var(--dur-reveal) * var(--pace, 1));
+    --t-delay: calc((var(--lead) + var(--i, 0) * var(--stagger)) * var(--pace, 1));
+  }
+
+  /* -- Section headings: the page's spine ---------------------------------
+   * The heading leads with no stagger slot, 60ms ahead of the section's
+   * content; its supporting line follows a beat behind, travelling further. */
+  [data-reveal-kind='head'] {
+    --t-dur: calc(var(--dur-head) * var(--pace, 1));
+    --t-delay: 0ms;
+  }
+
+  [data-reveal='out'][data-reveal-kind='head'] > h2 {
+    clip-path: inset(100% -5% 0 -5%);
+  }
+
+  [data-reveal='out'][data-reveal-kind='head'] > p {
+    opacity: 0;
+  }
+
+  [data-reveal='in'][data-reveal-kind='head'] > h2 {
+    animation: m-head var(--t-dur) var(--ease-out) backwards;
+  }
+
+  [data-reveal='in'][data-reveal-kind='head'] > p {
+    animation: m-body var(--t-dur) var(--ease-out) backwards;
+    animation-delay: calc(var(--follow) * var(--pace, 1));
+  }
+
+  /* -- A long rise ---------------------------------------------------------- */
+  [data-reveal='out'].reveal-rise {
+    opacity: 0;
+    transform: translateY(var(--rise));
+  }
+
+  [data-reveal='in'].reveal-rise {
+    animation: m-rise var(--t-dur) var(--ease-out) var(--t-delay) backwards;
+  }
+
+  /* -- Treatments: the card wipes up, the photo settles, the price follows -- */
+  .treatments {
+    --stagger: var(--stagger-wide);
+  }
+
+  [data-reveal='out'].reveal-card {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(var(--rise));
+  }
+
+  [data-reveal='in'].reveal-card {
+    animation: m-card var(--t-dur) var(--ease-out) var(--t-delay) backwards;
+  }
+
+  /* Each card's own small sequence: price and duration land a beat later. */
+  [data-reveal='out'] .m-after {
+    opacity: 0;
+  }
+
+  [data-reveal='in'] .m-after {
+    animation: m-fade var(--t-dur) var(--ease-out) backwards;
+    animation-delay: calc(var(--t-delay) + var(--beat) * var(--pace, 1));
+  }
+
+  /* -- Gallery: a frame that uncovers along its own long edge --------------- */
+  [data-reveal='out'].m-frame {
+    clip-path: inset(100% 0 0 0);
+  }
+
+  [data-reveal='out'].m-frame--left {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  [data-reveal='in'].m-frame {
+    animation: m-wipe-up var(--t-dur) var(--ease-out) var(--t-delay) backwards;
+  }
+
+  [data-reveal='in'].m-frame--left {
+    animation-name: m-wipe-left;
+  }
+
+  /* -- Two-speed: the photograph settles into whatever frame uncovers it ---- */
+  [data-reveal='out'] .m-zoom {
+    transform: scale(var(--zoom-from));
+  }
+
+  [data-reveal='in'] .m-zoom {
+    animation: m-zoom var(--t-dur) var(--ease-out) var(--t-delay) backwards;
+  }
+
+  /* -- Reviews: the featured quote, line by line ---------------------------- */
+  .reviews {
+    --stagger: var(--stagger-wide);
+  }
+
+  [data-reveal='out'] .m-word {
+    clip-path: inset(100% -8% 0 -8%);
+  }
+
+  [data-reveal='in'] .m-word,
+  [data-reveal='in'] .m-word > span {
+    animation-duration: var(--t-dur);
+    animation-timing-function: var(--ease-out);
+    animation-fill-mode: backwards;
+    animation-delay: calc(var(--t-delay) + var(--line, 0) * var(--stagger) * var(--pace, 1));
+  }
+
+  [data-reveal='in'] .m-word {
+    animation-name: m-line-mask;
+  }
+
+  [data-reveal='in'] .m-word > span {
+    display: inline-block;
+    animation-name: m-line-rise;
+  }
+
+  /* Stars fill left to right over 400ms, once their card has landed. */
+  [data-reveal='out'] .review__star-fill {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  [data-reveal='in'] .review__star-fill {
+    animation: m-fill calc(var(--dur-stars) / 5) linear backwards;
+    animation-delay: calc(
+      var(--t-delay) + var(--t-dur) * 0.7 + var(--s, 0) * var(--dur-stars) / 5
+    );
+  }
+
+  /* -- Visit: one unit, from furthest away ---------------------------------- */
+  [data-reveal='out'].reveal-unit {
+    opacity: 0;
+    transform: translateY(var(--rise-far));
+  }
+
+  [data-reveal='in'].reveal-unit {
+    animation: m-rise-far var(--t-dur) var(--ease-out) var(--t-delay) backwards;
+  }
+
+  /* -- Footer: a quiet arrival ---------------------------------------------- */
+  [data-reveal='out'] .site-footer__rule {
+    transform: scaleX(0);
+  }
+
+  [data-reveal='in'] .site-footer__rule {
+    animation: m-rule var(--dur-rule) var(--ease-out) backwards;
+  }
+
+  [data-reveal='out'] .m-col {
+    opacity: 0;
+    transform: translateY(var(--rise-near));
+  }
+
+  /* The columns start a third of the way into the rule, 80ms apart, so the
+     arrival reads as one motion rather than a line and then a pause. */
+  [data-reveal='in'] .m-col {
+    animation: m-rise-near var(--t-dur) var(--ease-out) backwards;
+    animation-delay: calc(var(--dur-rule) / 3 + var(--c, 0) * var(--stagger-tight));
+  }
+}
+
+/* -- Image drift ------------------------------------------------------------
+ * The layer between a frame and its photograph. It is taller than the frame by
+ * --drift top and bottom, and useDrift moves it within exactly that headroom,
+ * so no edge is ever exposed. Its data-drift attribute carries the same number
+ * to the script. Outside no-preference on purpose: under reduced motion it
+ * simply never moves, and the crop is the same either way.
+ */
+.m-drift {
+  position: absolute;
+  inset: calc(-1% * var(--drift, 10)) 0;
+}
+
+.m-drift > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* -- Keyframes -------------------------------------------------------------- */
+
+@keyframes m-head {
+  from {
+    clip-path: inset(100% -5% 0 -5%);
+    transform: translateY(var(--rise));
+  }
+  to {
+    clip-path: inset(-25% -5% -25% -5%);
+    transform: none;
+  }
+}
+
+@keyframes m-body {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-body));
+  }
+}
+
+@keyframes m-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise));
+  }
+}
+
+@keyframes m-rise-far {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-far));
+  }
+}
+
+@keyframes m-rise-near {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-near));
+  }
+}
+
+@keyframes m-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes m-card {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(var(--rise));
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+
+/* Uncovered from its bottom edge upward. */
+@keyframes m-wipe-up {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Uncovered from its left edge rightward: wide tiles only. */
+@keyframes m-wipe-left {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes m-zoom {
+  from {
+    transform: scale(var(--zoom-from));
+  }
+}
+
+/*
+ * Line reveals, shared by the hero headline and the featured quote.
+ * Negative insets on the end state clear italic ascenders and descenders,
+ * which sit outside a tight line box.
+ */
+@keyframes m-line-mask {
+  /* Starts as an empty region at the box's bottom edge. A negative bottom
+     inset here would leave a visible band below the box, and the line rising
+     from 36px down would show through it before its reveal. */
+  from {
+    clip-path: inset(100% -8% 0 -8%);
+  }
+  to {
+    clip-path: inset(-25% -8% -25% -8%);
+  }
+}
+
+@keyframes m-line-rise {
+  from {
+    transform: translateY(var(--rise-line));
+  }
+}
+
+@keyframes m-fill {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes m-rule {
+  from {
+    transform: scaleX(0);
+  }
+}

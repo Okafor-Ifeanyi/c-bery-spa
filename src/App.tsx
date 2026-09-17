@@ -4,6 +4,7 @@ import { Gallery } from './components/Gallery/Gallery';
 import { Header } from './components/Header/Header';
 import { Hero } from './components/Hero/Hero';
 import { Reservation } from './components/Reservation/Reservation';
+import { Reviews } from './components/Reviews/Reviews';
 import { Services } from './components/Services/Services';
 import { scrollToSection } from './lib/scrollToSection';
 
@@ -26,6 +27,7 @@ export default function App() {
         <Hero />
         <Services onBook={bookService} />
         <Gallery />
+        <Reviews />
         <Reservation service={service} onServiceChange={setService} />
       </main>
       <Footer />

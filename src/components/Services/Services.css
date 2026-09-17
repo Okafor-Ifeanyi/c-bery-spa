@@ -13,9 +13,10 @@
   }
 }
 
-@media (min-width: 1024px) {
+/* Four treatments fill one row exactly, so no cell is left empty. */
+@media (min-width: 1100px) {
   .treatments__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -25,16 +26,97 @@
 }
 
 /* One ratio per breakpoint keeps the grid even: 4:3 on phones, 4:5 above. */
-.treatment__image {
-  width: 100%;
+.treatment__media {
+  position: relative;
   aspect-ratio: 4 / 3;
-  object-fit: cover;
+  overflow: hidden;
   border-radius: var(--radius-image);
 }
 
+.treatment__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 @media (min-width: 640px) {
-  .treatment__image {
+  .treatment__media {
     aspect-ratio: 4 / 5;
+  }
+}
+
+/*
+ * Hover and keyboard focus are one gesture, not three: the card lifts, the
+ * frame's shadow deepens and the photo tightens inside its crop, all on the
+ * same duration and easing so they land together.
+ *
+ * focus-within gives the same treatment to anyone arriving on the Book link by
+ * keyboard. The Book link itself is always visible, on every input type.
+ */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .treatment {
+    transition: transform var(--dur-micro) var(--ease-hover);
+  }
+
+  .treatment__media {
+    transition: box-shadow var(--dur-micro) var(--ease-hover);
+  }
+
+  .treatment__image {
+    transition: transform var(--dur-micro) var(--ease-hover);
+  }
+
+  .treatment:hover,
+  .treatment:focus-within {
+    transform: translateY(calc(-1 * var(--lift)));
+  }
+
+  .treatment:hover .treatment__media,
+  .treatment:focus-within .treatment__media {
+    box-shadow: 0 14px 34px rgb(0 0 0 / 0.5);
+  }
+
+  .treatment:hover .treatment__image,
+  .treatment:focus-within .treatment__image {
+    transform: scale(1.04);
+  }
+}
+
+/*
+ * Touch (§6b follow-up): a phone never hovers, so the same gesture is given to
+ * whichever card is crossing the middle of the screen (useCentreFocus), and a
+ * press gives way under the finger. Same properties, same timing as hover.
+ */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .treatment {
+    transition: transform var(--dur-state) var(--ease-hover);
+  }
+
+  .treatment__media {
+    transition:
+      box-shadow var(--dur-state) var(--ease-hover),
+      transform var(--dur-state) var(--ease-hover);
+  }
+
+  .treatment__image {
+    transition: transform var(--dur-state) var(--ease-hover);
+  }
+
+  .treatment[data-centred] {
+    transform: translateY(calc(-1 * var(--lift)));
+  }
+
+  .treatment[data-centred] .treatment__media {
+    box-shadow: 0 14px 34px rgb(0 0 0 / 0.5);
+  }
+
+  .treatment[data-centred] .treatment__image {
+    transform: scale(1.04);
+  }
+
+  .treatment:active .treatment__media {
+    transform: scale(0.98);
+    transition-duration: var(--dur-micro);
   }
 }
 
@@ -86,16 +168,31 @@
   margin-top: var(--space-4);
 }
 
-.treatment--ask {
-  justify-content: flex-end;
-  align-items: flex-start;
-  gap: var(--space-4);
-  padding: clamp(1.5rem, 3vw, 2.5rem);
-  background: var(--color-cocoa);
-  border-radius: var(--radius-image);
+/*
+ * Closing invitation: centred under the grid and separated by a hairline,
+ * matching how the reference site sets its between-section prompts.
+ */
+.treatments__cta {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  margin-top: clamp(3rem, 6vw, 5rem);
+  /* The rule closes the Treatments section under this prompt, rather than
+     separating the prompt from the cards it belongs to. */
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+  border-bottom: 1px solid var(--color-rule);
+  text-align: center;
 }
 
-.treatment--ask p {
-  max-width: 30ch;
+.treatments__cta h3 {
+  font-size: var(--text-h3);
+}
+
+.treatments__cta p {
+  max-width: 46ch;
   color: var(--color-clay);
+}
+
+.treatments__cta .btn {
+  margin-top: var(--space-3);
 }

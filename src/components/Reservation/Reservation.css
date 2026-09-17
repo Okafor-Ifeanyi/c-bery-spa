@@ -58,7 +58,7 @@
   border: 1px solid var(--color-clay);
   border-radius: var(--radius-control);
   color-scheme: dark;
-  transition: border-color var(--dur-fast) ease;
+  transition: border-color var(--dur-micro) var(--ease-hover);
 }
 
 .field__control:hover {
@@ -200,4 +200,151 @@ textarea.field__control {
 
 .visit-info__list dd {
   margin: 0;
+}
+
+/* ==========================================================================
+   Form micro-interactions (design-plan-motion.md §3.1).
+   This is where the detail earns its keep: the form is the one place on the
+   page where a visitor is doing something rather than reading.
+   ========================================================================== */
+
+/*
+ * Grid, not block: it stops a textarea's inline descender gap putting the
+ * focus line a few pixels below the control it belongs to.
+ */
+.field__box {
+  position: relative;
+  display: grid;
+}
+
+/*
+ * The focus indicator draws itself in from the left rather than the border
+ * switching colour. Under reduced motion there is no transition, so it simply
+ * appears — the indicator is never the thing that goes missing.
+ */
+.field__box::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: var(--color-candle);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.field__box:focus-within::after {
+  transform: scaleX(1);
+}
+
+/* The label lifts and warms while its field has focus. */
+.field:focus-within label {
+  color: var(--color-candle);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .field__box::after {
+    transition: transform var(--dur-state) var(--ease-out);
+  }
+
+  .field label {
+    transition:
+      transform var(--dur-micro) var(--ease-hover),
+      color var(--dur-micro) var(--ease-hover);
+  }
+
+  .field:focus-within label {
+    transform: translateY(-2px);
+  }
+}
+
+/*
+ * Errors push the fields below them down instead of covering them, by
+ * animating the slot's own grid row from 0fr to 1fr. The negative margin
+ * cancels the field's flex gap while the slot is closed, so a field that has
+ * never errored sits exactly where it did before.
+ */
+.field__error-slot {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-top: calc(-1 * var(--space-2));
+}
+
+.field__error-slot[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+
+.field__error-slot > .field__error {
+  min-height: 0;
+  overflow: hidden;
+  padding-top: var(--space-2);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .field__error-slot {
+    transition: grid-template-rows var(--dur-state) var(--ease-out);
+  }
+}
+
+/* The button becomes the confirmation, rather than a toast appearing elsewhere. */
+.booking__submit[data-state='sent'] {
+  background: var(--color-candle);
+  color: var(--color-kola);
+  opacity: 1;
+}
+
+.booking__check {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Drawn left to right with a clip, not a dash offset: clip-path composites. */
+  .booking__check {
+    animation: check-draw var(--dur-state) var(--ease-out) backwards;
+  }
+
+  /* Outcome panels are uncovered downward, so they read as pushing the page. */
+  .booking__status,
+  .booking--sent {
+    animation: panel-in var(--dur-state) var(--ease-out) backwards;
+  }
+
+  /* Failure shakes once, and says what went wrong. */
+  .booking__status--error {
+    animation:
+      panel-in var(--dur-state) var(--ease-out) backwards,
+      shake-once var(--dur-shake) var(--ease-in-out) var(--dur-state) 1;
+  }
+}
+
+@keyframes check-draw {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+@keyframes shake-once {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px);
+  }
+  45% {
+    transform: translateX(3px);
+  }
+  70% {
+    transform: translateX(-2px);
+  }
 }

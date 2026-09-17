@@ -1,0 +1,214 @@
+/*
+ * One quote set large, three beneath it. The asymmetry comes from the type
+ * scale rather than from a masonry grid, which keeps it distinct from the
+ * gallery directly above.
+ */
+
+/*
+ * From 900px, the heading row and the quote row share the hero's deep inset on
+ * both sides, so the heading's two ends line up with the quote on the left and
+ * the artwork on the right. The container already supplies the gutter, so
+ * only the difference is added.
+ */
+@media (min-width: 900px) {
+  .reviews .section-head,
+  .reviews__feature {
+    padding-inline: calc(var(--inset-deep) - var(--gutter));
+  }
+
+  .reviews__feature {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: calc(var(--grid-gap) * 2);
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+  }
+
+  .reviews__feature .review--featured {
+    margin-bottom: 0;
+  }
+}
+
+/*
+ * Gold figure beside the quote, as tall as the quote. It is a cutout on a
+ * transparent background, so unlike a photo it has no frame: no fill, no
+ * radius, and no clipping. Its drift layer sits flush with the frame instead of
+ * overhanging it, and the figure floats past the frame's edges as it drifts.
+ */
+/*
+ * Below 900px the figure sits behind the featured quote as a faint overlay,
+ * centred, so the section keeps its artwork without adding scroll length.
+ */
+@media (max-width: 899.98px) {
+  .reviews__feature {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--space-6);
+  }
+
+  .reviews__art {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .reviews__art .m-drift {
+    inset: 0;
+    opacity: 0.28;
+  }
+
+  .reviews__art .m-drift > img {
+    object-fit: contain;
+    object-position: center;
+  }
+
+  /* A soft Kola pool keeps the quote legible over the brightest gold. */
+  .reviews__art::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgb(28 20 17 / 0.45), rgb(28 20 17 / 0) 100%);
+  }
+
+}
+
+@media (min-width: 900px) {
+  .reviews__art {
+    position: relative;
+    display: block;
+    min-height: 24rem;
+  }
+
+  .reviews__art .m-drift {
+    inset: 0;
+  }
+
+  /* Specific enough to beat the shared `.m-drift > img` cover crop, which
+     loads later: a cutout is shown whole, never cropped. */
+  .reviews__art .m-drift > img {
+    object-fit: contain;
+  }
+}
+
+.review {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.review__quote {
+  margin: 0;
+}
+
+/* The featured quote carries the section, in the same display italic as the
+   headings, and stops well short of the full measure. */
+.review--featured {
+  max-width: 24ch;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.review--featured .review__quote {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-style: italic;
+  line-height: 1.25;
+  max-width: 30ch;
+  text-wrap: pretty;
+}
+
+@media (min-width: 900px) {
+  .review--featured {
+    max-width: none;
+  }
+
+  .review--featured .review__quote {
+    font-size: clamp(1.75rem, 1.1rem + 1.9vw, 2.75rem);
+    max-width: 24ch;
+  }
+}
+
+.reviews__grid {
+  display: grid;
+  gap: var(--space-7) var(--grid-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-rule);
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+@media (min-width: 720px) {
+  .reviews__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.reviews__grid .review__quote {
+  color: var(--color-shea);
+  max-width: 40ch;
+}
+
+.review__by {
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--text-small);
+}
+
+.review__name {
+  font-weight: 500;
+}
+
+.review__meta {
+  color: var(--color-clay);
+}
+
+.review__stars {
+  display: flex;
+  gap: 0.15rem;
+}
+
+/* An outline, with the earned fill laid exactly over it. */
+.review__star {
+  position: relative;
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.review__star svg {
+  display: block;
+  fill: none;
+  stroke: var(--color-clay);
+  stroke-width: 1.5;
+}
+
+.review__star .review__star-fill {
+  position: absolute;
+  inset: 0;
+  fill: var(--color-candle);
+  stroke: var(--color-candle);
+}
+
+/* One box per word, so the featured quote can be masked by rendered line. */
+.m-word {
+  display: inline-block;
+}
+
+/* Below 900px the featured review is centred over its artwork. Last in the
+   file so it wins over the base .review and .review--featured rules above. */
+@media (max-width: 899.98px) {
+  .review--featured {
+    justify-items: center;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .review--featured .review__quote {
+    margin-inline: auto;
+  }
+
+  .review--featured .review__by {
+    justify-items: center;
+  }
+}
