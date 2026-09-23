@@ -2,7 +2,8 @@
    C-berry design tokens
    Rebrand by editing this block only. Every component reads from here.
    Contrast notes (WCAG 2.1): Shea on Kola 15.4, Clay on Kola 7.7,
-   Candle on Kola 9.2, Kola on Gold 7.8, Kola on Gold-bright 9.6. Primary
+   Candle on Kola 9.2, Kola on Gold 7.8, Kola on Gold-bright 9.6, Clay on
+   Cocoa 6.75, Clay-soft on Cocoa 5.76. Primary
    buttons are a Gold fill with Kola text, never Shea text on Gold (2.0).
    ========================================================================== */
 
@@ -12,6 +13,7 @@
   --color-cocoa: #2b1f1a;       /* raised panels: form, tiles, footer */
   --color-shea: #f4ebe1;        /* primary text */
   --color-clay: #b8a596;        /* secondary text, input borders */
+  --color-clay-soft: #aa988a;   /* footer credit: quieter than Clay, still AA */
   --color-candle: #e6ae6e;      /* prices, focus ring, open-now dot */
   --color-gold: #d4a24c;        /* primary action fill, with Kola text */
   --color-gold-bright: #e6bb6a; /* primary action hover */

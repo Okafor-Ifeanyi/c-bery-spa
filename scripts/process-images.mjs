@@ -31,29 +31,29 @@ const GRADES = {
 const SOURCES = [
   // C-berry's own photos
   { slot: 'hero', file: 'assets/Aromatherapy.jpg', grade: 'none',
-    alt: 'Candlelit treatment room with amber oil bottles, rolled white towels and dried grasses beside the massage bed' },
+    alt: 'Candlelit spa treatment room with amber massage-oil bottles, rolled white towels and dried grasses beside the bed' },
   { slot: 'massage', file: 'assets/Massage1.jpg', grade: 'strong',
-    alt: 'Woman resting face-down on a massage table, eyes closed and smiling, with smooth hot stones along her back' },
+    alt: 'Smiling woman resting her head on her hands during a massage, with smooth stones placed along her back' },
   { slot: 'facial', file: 'assets/Facial_Treatment.jpg', grade: 'none',
-    alt: "Therapist's hands smoothing a cleansing mask across a relaxed woman's face" },
+    alt: "Therapist's hands smoothing a cleansing facial mask across a relaxed woman's forehead and cheeks" },
   { slot: 'bodyScrub', file: 'assets/Body_Scrub.jpg', grade: 'warm',
-    alt: 'Four open jars of body scrub in pink, grey, brown and cream' },
+    alt: 'Four open jars of exfoliating body scrub in pink, grey, brown and cream' },
   { slot: 'gallery4', file: 'assets/Massage3.jpg', grade: 'warm',
-    alt: "Therapist's hands pressing warm stones into a woman's back during a hot stone massage" },
+    alt: "Therapist's hands kneading a woman's upper back during a hot stone massage, with black basalt stones along her spine" },
 
   // Unsplash stock (see README image table): replace with C-berry photos before launch
   { slot: 'aromatherapy', file: 'assets/images/unsplash-amber-jars.jpg', grade: 'warm',
-    alt: 'Two candles glowing in amber glass jars' },
+    alt: 'Two lit aromatherapy candles in labelled amber glass jars, with dried leaves scattered on the table' },
   { slot: 'gallery1', file: 'assets/images/unsplash-pillar-candles.jpg', grade: 'none',
-    alt: 'White pillar candles burning on a wooden table' },
+    alt: 'White pillar candles burning beside a sprig of dried autumn leaves on a wooden table' },
   { slot: 'gallery2', file: 'assets/images/unsplash-stones-on-skin.jpg', grade: 'warm',
-    alt: 'Smooth black massage stones resting on bare skin' },
+    alt: 'A line of smooth grey massage stones resting on bare skin' },
   { slot: 'gallery3', file: 'assets/images/unsplash-candles-eucalyptus.jpg', grade: 'warm',
-    alt: 'Lit white pillar candles among eucalyptus leaves in a dark room' },
+    alt: 'Cluster of lit pillar candles among eucalyptus sprigs in a dim room' },
   { slot: 'gallery5', file: 'assets/images/unsplash-steam-room-candle.jpg', grade: 'warm',
-    alt: 'A steam room lit by a single candle and soft ambient light' },
+    alt: 'Stone steam room with a heated bench and a row of candles glowing along the back wall' },
   { slot: 'gallery6', file: 'assets/images/unsplash-amber-oil-bottle.jpg', grade: 'warm',
-    alt: 'A hand holding a small amber glass bottle of oil' },
+    alt: 'Hands tipping a few drops of essential oil from a small amber dropper bottle' },
 
   // Artwork beside the featured review: a gold figure supplied on near-white.
   // Only the white is removed (see cutOut) so it floats on the dark page; the
@@ -215,7 +215,7 @@ async function buildOgImage(buffer) {
       </defs>
       <rect width="1200" height="630" fill="url(#fade)"/>
       <text x="80" y="310" font-family="Cormorant Garamond, Georgia, serif" font-style="italic" font-size="128" fill="#f4ebe1">C-berry</text>
-      <text x="86" y="380" font-family="Helvetica Neue, Arial, sans-serif" font-size="30" letter-spacing="3" fill="#e6ae6e">OPEN 24/7 · G.R.A., ENUGU</text>
+      <text x="86" y="380" font-family="Helvetica Neue, Arial, sans-serif" font-size="30" letter-spacing="3" fill="#e6ae6e">DAY SPA · OPEN 24/7 · G.R.A., ENUGU</text>
     </svg>`);
 
   await sharp(buffer)
