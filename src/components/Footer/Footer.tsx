@@ -66,6 +66,17 @@ export function Footer() {
 
       <div className="container site-footer__base m-col" style={col(3)}>
         <p>© {year} C-berry. All rights reserved.</p>
+        <p className="site-footer__credit">
+          Developed by{' '}
+          <a
+            className="text-link"
+            href="https://ifeanyi.ifeanyiokafor.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Ifeanyi Okafor
+          </a>
+        </p>
         <p>Some photographs from Unsplash, used under the Unsplash License.</p>
       </div>
     </footer>

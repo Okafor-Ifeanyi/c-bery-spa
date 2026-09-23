@@ -19,13 +19,13 @@ The brief forbids placeholder `#` links and invented reviews, so each was left o
 ### 1. Email
 - [ ] Add `email` to `business` in `src/data/business.ts`.
 - [ ] Show it in the Visit section contact list as a `mailto:` link, after WhatsApp and phone.
-- [ ] Add `"email"` to the `LocalBusiness` JSON-LD in `index.html`.
+- [ ] Set `email` in `src/data/business.ts`; the JSON-LD picks it up at build.
 - [ ] If the booking form moves to Formspree, set the Formspree notification address to this inbox.
 
 ### 2. Social links
-- [ ] Add a `socials` array (`{ network, url }`) to `src/data/business.ts`. Only networks with a real URL are listed.
+- [ ] Fill in `socials` in `src/data/business.ts` (already there, all `null`). Only networks with a real URL are listed.
 - [ ] Render inline-SVG icons in the footer (no icon font), each with an accessible name such as "C-berry on Instagram".
-- [ ] Add the URLs to `"sameAs"` in the JSON-LD.
+- [ ] `sameAs` in the JSON-LD is built from `socials` automatically.
 
 ### 3. Reviews section
 

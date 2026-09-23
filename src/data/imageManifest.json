@@ -4,77 +4,77 @@
     "srcSet": "/images/hero-480.webp 480w, /images/hero-736.webp 736w",
     "width": 736,
     "height": 1313,
-    "alt": "Candlelit treatment room with amber oil bottles, rolled white towels and dried grasses beside the massage bed"
+    "alt": "Candlelit spa treatment room with amber massage-oil bottles, rolled white towels and dried grasses beside the bed"
   },
   "massage": {
     "src": "/images/massage-736.webp",
     "srcSet": "/images/massage-480.webp 480w, /images/massage-736.webp 736w",
     "width": 736,
     "height": 736,
-    "alt": "Woman resting face-down on a massage table, eyes closed and smiling, with smooth hot stones along her back"
+    "alt": "Smiling woman resting her head on her hands during a massage, with smooth stones placed along her back"
   },
   "facial": {
     "src": "/images/facial-736.webp",
     "srcSet": "/images/facial-480.webp 480w, /images/facial-736.webp 736w",
     "width": 736,
     "height": 1187,
-    "alt": "Therapist's hands smoothing a cleansing mask across a relaxed woman's face"
+    "alt": "Therapist's hands smoothing a cleansing facial mask across a relaxed woman's forehead and cheeks"
   },
   "bodyScrub": {
     "src": "/images/bodyScrub-736.webp",
     "srcSet": "/images/bodyScrub-480.webp 480w, /images/bodyScrub-736.webp 736w",
     "width": 736,
     "height": 1308,
-    "alt": "Four open jars of body scrub in pink, grey, brown and cream"
+    "alt": "Four open jars of exfoliating body scrub in pink, grey, brown and cream"
   },
   "gallery4": {
     "src": "/images/gallery4-300.webp",
     "srcSet": "/images/gallery4-300.webp 300w",
     "width": 300,
     "height": 450,
-    "alt": "Therapist's hands pressing warm stones into a woman's back during a hot stone massage"
+    "alt": "Therapist's hands kneading a woman's upper back during a hot stone massage, with black basalt stones along her spine"
   },
   "aromatherapy": {
     "src": "/images/aromatherapy-800.webp",
     "srcSet": "/images/aromatherapy-480.webp 480w, /images/aromatherapy-800.webp 800w, /images/aromatherapy-1200.webp 1200w, /images/aromatherapy-1600.webp 1600w",
     "width": 1600,
     "height": 2400,
-    "alt": "Two candles glowing in amber glass jars"
+    "alt": "Two lit aromatherapy candles in labelled amber glass jars, with dried leaves scattered on the table"
   },
   "gallery1": {
     "src": "/images/gallery1-800.webp",
     "srcSet": "/images/gallery1-480.webp 480w, /images/gallery1-800.webp 800w, /images/gallery1-1200.webp 1200w, /images/gallery1-1600.webp 1600w",
     "width": 1600,
     "height": 1143,
-    "alt": "White pillar candles burning on a wooden table"
+    "alt": "White pillar candles burning beside a sprig of dried autumn leaves on a wooden table"
   },
   "gallery2": {
     "src": "/images/gallery2-800.webp",
     "srcSet": "/images/gallery2-480.webp 480w, /images/gallery2-800.webp 800w, /images/gallery2-1200.webp 1200w, /images/gallery2-1600.webp 1600w",
     "width": 1600,
     "height": 1066,
-    "alt": "Smooth black massage stones resting on bare skin"
+    "alt": "A line of smooth grey massage stones resting on bare skin"
   },
   "gallery3": {
     "src": "/images/gallery3-800.webp",
     "srcSet": "/images/gallery3-480.webp 480w, /images/gallery3-800.webp 800w, /images/gallery3-1200.webp 1200w, /images/gallery3-1600.webp 1600w",
     "width": 1600,
     "height": 2400,
-    "alt": "Lit white pillar candles among eucalyptus leaves in a dark room"
+    "alt": "Cluster of lit pillar candles among eucalyptus sprigs in a dim room"
   },
   "gallery5": {
     "src": "/images/gallery5-800.webp",
     "srcSet": "/images/gallery5-480.webp 480w, /images/gallery5-800.webp 800w, /images/gallery5-1200.webp 1200w, /images/gallery5-1600.webp 1600w",
     "width": 1600,
     "height": 1067,
-    "alt": "A steam room lit by a single candle and soft ambient light"
+    "alt": "Stone steam room with a heated bench and a row of candles glowing along the back wall"
   },
   "gallery6": {
     "src": "/images/gallery6-800.webp",
     "srcSet": "/images/gallery6-480.webp 480w, /images/gallery6-800.webp 800w, /images/gallery6-1200.webp 1200w, /images/gallery6-1600.webp 1600w",
     "width": 1600,
     "height": 1066,
-    "alt": "A hand holding a small amber glass bottle of oil"
+    "alt": "Hands tipping a few drops of essential oil from a small amber dropper bottle"
   },
   "reviewsArt": {
     "src": "/images/reviewsArt-736.webp",

@@ -1,4 +1,4 @@
-import type { ImageSlot } from './images';
+import type { ImageSlot } from './images.ts';
 
 export interface Service {
   id: string;

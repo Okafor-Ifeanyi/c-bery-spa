@@ -3,34 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>C-berry Spa | Massage, Facials &amp; Body Scrubs in G.R.A. Enugu, Open 24/7</title>
+    <title>C-berry Spa | 24-Hour Spa &amp; Massage in G.R.A., Enugu</title>
     <meta
       name="description"
-      content="C-berry is a spa inside De Castle Hotel, G.R.A. Enugu, open 24 hours a day. Massage, facials, body scrubs and aromatherapy from ₦25,000. Book online or on WhatsApp."
+      content="C-berry Spa is a 24-hour day spa inside De Castle Hotel, G.R.A. Enugu. Massage, facials, body scrubs and aromatherapy from ₦25,000. Book online or on WhatsApp."
     />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://c-berry.vercel.app/" />
     <meta name="theme-color" content="#1c1411" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-    <!-- Open Graph / Twitter. TODO: once the domain is live, make og:image absolute and add og:url. -->
+    <!-- Icons: generated from favicon.svg by `npm run icons`. -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Open Graph / Twitter. Absolute URLs: crawlers don't resolve relative ones. -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="C-berry" />
+    <meta property="og:site_name" content="C-berry Spa" />
     <meta property="og:locale" content="en_NG" />
-    <meta property="og:title" content="C-berry Spa, open 24/7 in G.R.A. Enugu" />
+    <meta property="og:url" content="https://c-berry.vercel.app/" />
+    <meta property="og:title" content="C-berry Spa, a 24-hour day spa in G.R.A. Enugu" />
     <meta
       property="og:description"
-      content="Luxury self-care, spa life, feminine wellness &amp; everyday healing. Massage, facials, scrubs and aromatherapy inside De Castle Hotel."
+      content="Massage, facials, body scrubs and aromatherapy inside De Castle Hotel, G.R.A. Enugu. Open 24 hours, every day. Book online or on WhatsApp."
     />
-    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:image" content="https://c-berry.vercel.app/og-image.jpg" />
+    <meta property="og:image:secure_url" content="https://c-berry.vercel.app/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="C-berry, a candlelit spa in G.R.A. Enugu" />
+    <meta
+      property="og:image:alt"
+      content="The C-berry wordmark and the words Day spa, open 24/7, G.R.A. Enugu over white pillar candles and dried leaves"
+    />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="C-berry Spa, open 24/7 in G.R.A. Enugu" />
+    <meta name="twitter:title" content="C-berry Spa, a 24-hour day spa in G.R.A. Enugu" />
     <meta
       name="twitter:description"
-      content="Massage, facials, scrubs and aromatherapy inside De Castle Hotel, G.R.A. Enugu. Open 24 hours, every day."
+      content="Massage, facials, body scrubs and aromatherapy inside De Castle Hotel, G.R.A. Enugu. Open 24 hours, every day. Book online or on WhatsApp."
     />
-    <meta name="twitter:image" content="/og-image.jpg" />
+    <meta name="twitter:image" content="https://c-berry.vercel.app/og-image.jpg" />
+    <meta
+      name="twitter:image:alt"
+      content="The C-berry wordmark and the words Day spa, open 24/7, G.R.A. Enugu over white pillar candles and dried leaves"
+    />
 
     <!-- Hero photo is the LCP element: start fetching it before the JS bundle runs. -->
     <link
@@ -51,42 +70,7 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Hanken+Grotesk:wght@400;500&display=swap"
     />
 
-    <!-- LocalBusiness data. Keep in sync with src/data/business.ts and src/data/services.ts. -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "DaySpa",
-        "name": "C-berry",
-        "description": "Luxury self-care, spa life, feminine wellness & everyday healing.",
-        "image": "/og-image.jpg",
-        "telephone": "+2347025529519",
-        "priceRange": "₦25,000–₦35,000",
-        "currenciesAccepted": "NGN",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Inside De Castle Hotel, 14 Umuona Street, behind Park Lane Hospital, G.R.A.",
-          "addressLocality": "Enugu",
-          "addressRegion": "Enugu State",
-          "addressCountry": "NG"
-        },
-        "openingHoursSpecification": {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-          "opens": "00:00",
-          "closes": "23:59"
-        },
-        "hasOfferCatalog": {
-          "@type": "OfferCatalog",
-          "name": "Treatments",
-          "itemListElement": [
-            { "@type": "Offer", "price": "35000", "priceCurrency": "NGN", "itemOffered": { "@type": "Service", "name": "Massage: Full Body with Essential Oils (60 min)" } },
-            { "@type": "Offer", "price": "25000", "priceCurrency": "NGN", "itemOffered": { "@type": "Service", "name": "Facial Treatment: Deep Cleansing & Hydration (45 min)" } },
-            { "@type": "Offer", "price": "30000", "priceCurrency": "NGN", "itemOffered": { "@type": "Service", "name": "Body Scrub: Exfoliation & Moisturization (50 min)" } },
-            { "@type": "Offer", "price": "35000", "priceCurrency": "NGN", "itemOffered": { "@type": "Service", "name": "Aromatherapy Session: Relaxation & Stress Relief (40 min)" } }
-          ]
-        }
-      }
-    </script>
+    <!-- JSON-LD: added to <head> at build time from src/seo/structuredData.ts (see vite.config.ts). -->
   </head>
   <body>
     <noscript>
